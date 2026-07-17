@@ -4,6 +4,7 @@ import "./App.css";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     axios
@@ -16,24 +17,43 @@ function App() {
       });
   }, []);
 
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <div className="App">
       <h1>DistEasy Inventory</h1>
+
+      <input
+        type="text"
+        placeholder="Search products..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          padding: "10px",
+          width: "300px",
+          marginBottom: "20px",
+          fontSize: "16px",
+        }}
+      />
 
       <table border="1" cellPadding="8">
         <thead>
           <tr>
             <th>ID</th>
             <th>Product Name</th>
+            <th>Price (₹)</th>
             <th>Stock</th>
           </tr>
         </thead>
 
         <tbody>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <tr key={product.id}>
               <td>{product.id}</td>
               <td>{product.name}</td>
+              <td>₹{product.price}</td>
               <td>{product.stock}</td>
             </tr>
           ))}
